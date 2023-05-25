@@ -5,10 +5,12 @@ const courseSchema = new mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: "Teacher",
     },
+
     name: {
         type: String,
         required: true
     },
+    
     courseMaterial: {
         type: [
             {
@@ -18,48 +20,28 @@ const courseSchema = new mongoose.Schema({
             }
         ]
     },
-    assignments: [
-        {
-            assignmentDetail: {
-                type: String,
-            },
-            grades: [
-                {
-                    student: {
-                        type: mongoose.Schema.Types.ObjectId,
-                        ref: "Student"
-                    },
-                    grade: {
-                        type: Number,
-                    },
-                },
-            ],
-            dueDate: {
-                type: Date,
+
+    assignments: {
+        type: [
+            {
+                aID: {
+                    type: mongoose.Types.ObjectId,
+                    ref: 'Assignment' 
+                }
             }
-        },
-    ],
-    quizzes: [
-        {
-            quizDetails: {
-                type: String,
-            },
-            grade: [
-                {
-                    student: {
-                        type: mongoose.Schema.Types.ObjectId,
-                        ref: "Student"
-                    },
-                    marks: {
-                        type: Number,
-                    },
-                },
-            ],
-            dueDate: {
-                type: Date,
-            },
-        },
-    ],
+        ]
+    },
+
+    quizzes: {
+        type: [
+            {
+                qID: {
+                    type: mongoose.Types.ObjectId,
+                    ref: 'Quiz' 
+                }
+            }
+        ]
+    },
 
     midTerm:
     {

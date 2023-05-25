@@ -5,10 +5,12 @@ const classSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+
     teacher: {
         type: mongoose.Types.ObjectId,
         ref: 'Teacher'
     },
+    
     students: {
         type: [
             {

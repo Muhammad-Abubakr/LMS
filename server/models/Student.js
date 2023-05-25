@@ -5,14 +5,17 @@ const studentSchema = new mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: "User",
     },
+
     name: {
         type: String,
         required: true,
     },
+
     rollno: {
         type: String,
         required: true,
     },
+    
     enrolledCourses: [
         {
             type: mongoose.Schema.Types.ObjectId,
