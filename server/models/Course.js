@@ -10,6 +10,15 @@ const courseSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    courseMaterial: {
+        type: [
+            {
+                name: String,
+                authorName: String,
+                edition: Number
+            }
+        ]
+    },
     assignments: [
         {
             assignmentDetail: {
