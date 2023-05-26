@@ -57,7 +57,7 @@ const courseSchema = new mongoose.Schema({
             },
         ],
         dueDate: {
-            type: date,
+            type: Date,
         },
     },
 
@@ -74,7 +74,7 @@ const courseSchema = new mongoose.Schema({
             },
         ],
         dueDate: {
-            type: date,
+            type: Date,
         },
     },
 }, {
