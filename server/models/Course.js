@@ -14,6 +14,7 @@ const courseSchema = new mongoose.Schema({
     courseMaterial: {
         type: [
             {
+                mId: String,
                 name: String,
                 authorName: String,
                 edition: Number
