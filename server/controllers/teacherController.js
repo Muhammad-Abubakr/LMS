@@ -2,6 +2,7 @@ const Assignment = require('../models/Assignment');
 const Class = require('../models/Class');
 const Quiz = require('../models/Quiz');
 const Student = require('../models/Student')
+const Course = require('../models/Course')
 
 //GET
 const getAssignment = (req, res) => {
@@ -103,8 +104,8 @@ const addQuizMarks = (req, res, next) => {
               return res.status(404).json({ error: 'Quiz not found' });
           }
 
-          const studentExists = quiz.grades.filter( (entry) => entry.student === sid)
-          if(studentExists){
+          const studentExists = quiz.grades.filter( (entry) => entry.student.toString() === sid)
+          if(studentExists.length > 0){
             return res.status(400).json({ error: "Student's marks already exist", quiz });
           }
 
@@ -120,10 +121,10 @@ const addQuizMarks = (req, res, next) => {
                   };
 
                   quiz.grades.push(studentMarks);
-                  quiz.save();
-
+                  return quiz.save();
+                })
+                .then(() => {
                   res.status(200).json({ message: 'Quiz marks added successfully', quiz });
-
               })
               .catch((error) => {
                   res.status(500).json({ error: 'Failed to add quiz marks' });
@@ -134,6 +135,177 @@ const addQuizMarks = (req, res, next) => {
           res.status(500).json({ error: 'Failed to find the quiz' });
       });
 };
+
+// const updateQuizMarks = null
+
+const addAssignmentMarks = (req, res, next) => {
+  const { aid, sid } = req.params;
+  const { marks } = req.body;
+
+  Assignment.findById(aid)
+    .then(assignment => {
+      if (!assignment) {
+        return res.status(404).json({ error: 'Assignment not found' });
+      }
+
+      const studentExists = assignment.grades.filter( (entry) => entry.student.toString() === sid)
+
+      if(studentExists.length > 0){
+        return res.status(400).json({ error: "Student's marks already exist", assignment });
+      }
+
+      Student.findById(sid)
+        .then(student => {
+          if (!student) {
+            return res.status(404).json({ error: 'Student not found' });
+          }
+
+          const studentMarks = {
+            student: sid,
+            marks: marks,
+          };
+
+          assignment.grades.push(studentMarks);
+          return assignment.save();
+        })
+        .then(() => {
+          res.status(200).json({ message: 'Assignment marks added successfully', assignment });
+        })
+        .catch((error) => {
+          res.status(500).json({ error: 'Failed to add assignment marks' });
+        });
+    }) 
+    .catch((error) => {
+      console.log(error)
+      res.status(500).json({ error: 'Failed to find the assignment' });
+    });
+};
+
+// const updateAssignmentMarks = null 
+
+const addMidtermMarks = (req, res, next) => {
+  const { courseid, sid } = req.params;
+  const { marks } = req.body;
+
+  Course.findById(courseid)
+    .then(course => {
+      if (!course) {
+        return res.status(404).json({ error: 'Course not found' });
+      }
+
+      const studentExists = course.midTerm.grade.filter( (entry) => entry.student.toString() === sid)
+
+      if(studentExists.length > 0){
+        return res.status(400).json({ error: "Student's marks already exist", course });
+      }
+
+      Student.findById(sid)
+        .then(student => {
+          if (!student) {
+            return res.status(404).json({ error: 'Student not found' });
+          }
+
+          const studentMarks = {
+            student: sid,
+            marks: marks,
+          };
+
+          course.midTerm.grade.push(studentMarks);
+
+          return course.save();
+        })
+        .then(() => {
+          res.status(200).json({ message: 'Midterm marks added successfully', course });
+        })
+        .catch((error) => {
+          res.status(500).json({ error: 'Failed to add midterm marks' });
+        });
+    })
+    .catch((error) => {
+      console.log(error)
+      res.status(500).json({ error: 'Failed to find the course' });
+    });
+};
+
+const updateMidtermMarks = (req, res, next) => {
+  const { courseid, sid } = req.params;
+  const { marks } = req.body;
+
+  Course.findById(courseid)
+    .then(course => {
+      if (!course) {
+        return res.status(404).json({ error: 'Course not found' });
+      }
+
+      Student.findById(sid)
+        .then(student => {
+          if (!student) {
+            return res.status(404).json({ error: 'Student not found' });
+          }
+          
+          const studentMarks = course.midTerm.grade.find(g => g.student.toString() === sid.toString());
+          
+          if (!studentMarks) {
+            return res.status(404).json({ error: 'Midterm marks not found for the student' });
+          }
+
+          studentMarks.marks = marks;
+          return course.save();
+        })
+        .then(() => {
+          res.status(200).json({ message: 'Midterm marks updated successfully', course });
+        })
+        .catch(error => {
+          res.status(500).json({ error: 'Failed to update midterm marks' });
+        });
+    })
+    .catch(error => {
+      res.status(500).json({ error: 'Failed to find the course' });
+    });
+};
+
+const addFinalMarks = async (req, res, next) => {
+  const { sid, courseid } = req.params;
+  const { marks } = req.body;
+
+  Course.findById(courseid)
+      .then(course => {
+          if (!course) {
+              return res.status(404).send('Course not found');
+          }
+          const studentExists = course.final.grade.filter( (entry) => entry.student.toString() === sid)
+
+          if(studentExists.length > 0){
+            return res.status(400).json({ error: "Student's marks already exist", course });
+          }
+
+          Student.findById(sid)
+            .then(student => {
+              if (!student) {
+                return res.status(404).json({ error: 'Student not found' });
+              }
+
+              const studentMarks = {
+                student: sid,
+                marks: marks,
+              };
+
+              course.final.grade.push(studentMarks);
+
+              return course.save();
+            })
+            .then(() => {
+              res.status(200).json({ message: 'Final marks added successfully', course });
+            })
+            .catch((error) => {
+              res.status(500).json({ error: 'Failed to add final marks' });
+            }); 
+      })
+      .catch(error => {
+          console.error(error);
+          res.status(500).send('Server error');
+      });
+}
 
 //DELETE
 const deleteAssignment = (req, res, next) => {
@@ -170,43 +342,8 @@ const deleteQuiz = (req, res, next) => {
     });
 };
 
-const deleteQuizMarks = (req, res) => {
-  const quizId = req.params.qid;
-  const studentId = req.params.sid;
+// const deleteQuizMarks = null
 
-  // Find the course that contains the specified quiz
-  Course.findOne({ 'quizzes._id': quizId })
-    .then((course) => {
-      if (!course) {
-        return res.status(404).json({ error: 'Course not found' });
-      }
-
-      // Find the specified quiz within the course
-      const quiz = course.quizzes.find((quiz) => quiz._id.toString() === quizId);
-
-      if (!quiz) {
-        return res.status(404).json({ error: 'Quiz not found' });
-      }
-
-      // Find the student's marks index in the quiz
-      const studentMarksIndex = quiz.grade.findIndex((grade) => grade.student._id.toString() === studentId);
-
-      if (studentMarksIndex === -1) {
-        return res.status(404).json({ error: 'Student marks not found' });
-      }
-
-      // Remove the student's marks from the quiz
-      quiz.grade.splice(studentMarksIndex, 1);
-      return course.save();
-    })
-    .then(() => {
-      res.json({ message: 'Student marks deleted successfully' });
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(500).json({ error: 'Server error' });
-    });
-}
 
 
 module.exports = {
@@ -218,5 +355,8 @@ module.exports = {
   updateQuiz,
   deleteQuiz,
   addQuizMarks,
-  deleteQuizMarks
+  addAssignmentMarks,
+  addMidtermMarks,
+  updateMidtermMarks,
+  addFinalMarks
 }
