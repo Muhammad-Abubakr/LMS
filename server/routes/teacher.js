@@ -87,6 +87,9 @@ router.put("/addquizmarks/:qid/:sid", assignmentController.addQuizMarks);
 router.delete('/deletequizmarks/:qid/:sid', assignmentController.deleteQuizMarks);
 
 
-
+// @desc    update final marks
+// @route   PUT /updatefinalmarks/:courseid/:sid
+// @submitted by Muhammad Anees
+router.put("/updatefinalmarks/:courseid/:sid", assignmentController.updateFinalMarks)
 
 module.exports = router;
