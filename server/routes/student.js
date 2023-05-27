@@ -9,11 +9,11 @@ router.get("/", (req, res, next) => {
   res.send("Hello, Student");
 });
 
-// Authentication - Signup (Ismail)
-router.post("/signup", controller.signup);
-
 // Authentication - Login (Hammad)
-router.post("/login", controller.login);
+router.get("/login", studentController.login);
+
+// Authentication - Signup (Ismail)
+router.post("/login", studentController.signIn);
 
 //Moeez Ahmed
 router.get("/userprofile", studentController.studentprofile);

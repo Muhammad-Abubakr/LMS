@@ -3,50 +3,42 @@ var router = express.Router();
 const student = require("../models/Student");
 const course = require("../models/Course");
 
-// Signup (Ismail)
-const signup = async (req, resp) => {
-  const newuser = new User({
-    username: req.body.username,
-    email: req.body.email,
-    password: CryptoJS.AES.encrypt(
-      req.body.password,
-      process.env.SECRET_KEY
-    ).toString(),
-  });
-  try {
-    const user = await newuser.save();
-    resp.json(user);
-  } catch (err) {
-    resp.status(500).json(err);
+const login = (req, res) => {
+  const { username, password } = req.query;
+  if (username === "admin" && password === "password") {
+    res.send("Login successful");
+  } else {
+    res.status(401).send("Invalid username or password");
   }
 };
 
-// Login (Hammad)
-const login = async (req, resp) => {
+const signIn = async (req, res) => {
   try {
-    const user = await User.findOne({ email: req.body.email });
-    console.log(user);
-    if (!user) {
-      resp.status(401).send("Wrong password or username");
-    } else {
-      const bytes = CryptoJS.AES.decrypt(user.password, process.env.SECRET_KEY);
-      const originalPassword = bytes.toString(CryptoJS.enc.Utf8);
-      console.log(originalPassword);
-      if (originalPassword !== req.body.password) {
-        resp.status(401).send("Wrong password or username");
-      } else {
-        console.log(user);
-        const accessToken = jwt.sign(
-          { id: user._id, role: user.role },
-          process.env.SECRET_KEY,
-          { expiresIn: "1d" } //logout
-        );
-        const { password, ...otherDetails } = user._doc;
-        resp.status(200).send({ ...otherDetails, accessToken });
-      }
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(400).json({ error: "Please fill in all fields." });
     }
-  } catch (err) {
-    resp.status(500).json(err);
+    const user = await User.findOne({ email: email });
+    if (user) {
+      const isPasswordValid = password === user.password;
+      const token = jwt.sign({ userId: user._id }, "your-secret-key", {
+        expiresIn: "1d",
+      });
+      res.cookie("jwt-token", token, {
+        expires: new Date(Date.now() + 86400000),
+        httpOnly: true,
+      });
+      if (isPasswordValid) {
+        res.json({ message: user });
+      } else {
+        res.json({ message: "Incorrect password." });
+      }
+    } else {
+      res.json({ message: "User not found." });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Internal server error." });
   }
 };
 
@@ -90,4 +82,4 @@ const getmaterials = function (req, res, next) {
     .catch((err) => next(err));
 };
 
-module.exports = { studentprofile, getassignment, getmaterials, login, signup };
+module.exports = { studentprofile, getassignment, getmaterials, login, signIn };
