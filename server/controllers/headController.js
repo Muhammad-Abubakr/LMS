@@ -14,6 +14,17 @@ const viewDashboard = async (req, res, next) => {
     });
 }
 
+/// getCourseMaterial
+const getCourseMaterial = (req, res, next) => {
+    Course.findById(req.params.cid)
+        .then((data) => {
+            res.statuscode = 200
+            res.setHeader('Content-type', 'application/json');
+            res.json(data.courseMaterial);
+        }, (err) => next(err)).catch((err) => next(err));
+}
+
+
 ///  Get the Results of Students
 const getStudentResults = async (req, res, next) => {
     try {
@@ -151,6 +162,7 @@ async function getStudentCountForMonth(req, res) {
 module.exports = {
     getStudentCountForMonth,
     getStudentResults,
+    getCourseMaterial,
     getClassById,
     getCourseResultById,
     viewDashboard
