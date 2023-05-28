@@ -30,4 +30,16 @@ router.get(
   studentController.getassignment
 );
 
+// Show Dashboard "Adil's Route"
+router.get("/student-dashboard/:sid", studentController.showDashboard);
+
+// Show Grades "Adil's Route"
+router.get(
+  "/student-dashboard/:courseid/enrolled-course/grades",
+  studentController.viewGrades
+);
+
+//Bilal Gondal
+router.get("/student/:id/result", studentController.studentResult);
+
 module.exports = router;
