@@ -109,7 +109,6 @@ const viewQuizMarks = (req, res, next) => {
     });
 };
 
-// @route   GET /marks/:courseid/:ismid?/:isfinal?
 const viewMidMarks = (req, res, next) => {
   Course.findById(req.params.courseid)
     .populate('midTerm.grade.student')
@@ -596,6 +595,26 @@ const addFinalMarks = (req, res, next) => {
     });
 };
 
+const updateFinalMarks = (req, res, next) => {
+  Course.findById(req.params.courseid)
+    .then((course) => {
+      try {
+        course.final.grade.filter(
+          (item) => item.student.toString() == req.params.sid
+        )[0].marks = req.body.marks;
+        course.save();
+        res.status(200).json("Marks updated successfully!");
+      } catch (error) {
+        res.status(404).json("Invalid Student ID");
+        console.log(error);
+      }
+    })
+    .catch((error) => {
+      res.status(404).json("Course ID not found!");
+      console.log(error.message);
+    });
+};
+
 const updateCourseMaterial = (req, res, next) => {
   const { name, authorName, edition } = req.body;
 
@@ -862,6 +881,7 @@ module.exports = {
   deleteMidTermMarks,
   viewFinalMarks,
   addFinalMarks,
+  updateFinalMarks,
   deleteFinalMarks,
   viewMaterial,
   addMaterial,

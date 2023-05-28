@@ -155,11 +155,11 @@ router.put("/addfinalmarks/:courseid/:sid", teacherController.addFinalMarks)
 // @desc    update final marks
 // @route   PUT /updatefinalmarks/:courseid/:sid
 // @submitted by Anees
+router.put("/updatefinalmarks/:courseid/:sid", teacherController.updateFinalMarks)
 
 // @desc    delete final marks
 // @route   DELETE /deletefinalmarks/:courseid/:sid
 // @submitted by Zeerak
 router.delete("/deletefinalmarks/:courseid/:sid", teacherController.deleteFinalMarks);
-
 
 module.exports = router;
