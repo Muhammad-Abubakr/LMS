@@ -12,8 +12,7 @@ const studentSchema = new mongoose.Schema({
     },
 
     rollno: {
-        type: String,
-        required: true,
+        type: String, 
     },
     
     enrolledCourses: [

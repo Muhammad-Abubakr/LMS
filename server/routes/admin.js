@@ -10,7 +10,7 @@ const {
 
 // GET Methods
 router.get("/", dashboard);
-
+ 
 router.get("/classes", getClasses);
 
 router.get("/classes/:cid", getSingleClass);

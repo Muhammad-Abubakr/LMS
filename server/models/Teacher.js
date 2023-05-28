@@ -11,7 +11,6 @@ const teacherSchema = new mongoose.Schema({
     },
     designation: {
         type: String,
-        required: true
     },
 }, {
     timestamps: true
