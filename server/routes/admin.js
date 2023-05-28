@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const { protect } = require("../middlewares/authMiddleware");
 
 const {
   getClasses, dashboard, getSingleClass, getStudents,
@@ -9,37 +10,37 @@ const {
 } = require("../controllers/adminController");
 
 // GET Methods
-router.get("/", dashboard);
+router.get("/", protect, dashboard);
 
-router.get("/classes", getClasses);
+router.get("/classes", protect, getClasses);
 
-router.get("/classes/:cid", getSingleClass);
+router.get("/classes/:cid", protect, getSingleClass);
 
-router.get("/students", getStudents);
+router.get("/students", protect, getStudents);
 
-router.get("/students/:sid", getSingleStudent);
+router.get("/students/:sid", protect, getSingleStudent);
 
-router.get("/teachers", getTeachers);
+router.get("/teachers", protect, getTeachers);
 
-router.get("/teachers/:tid", getSingleTeacher);
+router.get("/teachers/:tid", protect, getSingleTeacher);
 
 // POST Methods
-router.post("/addteacher", addTeacher);
+router.post("/addteacher", protect, addTeacher);
 
-router.post("/addclass", addClass);
+router.post("/addclass", protect, addClass);
 
-router.post("/addstudent", addStudent);
+router.post("/addstudent", protect, addStudent);
 
 // PUT Methods
-router.put("/assignstudent/:cid/:sid", addStudentInClass);
+router.put("/assignstudent/:cid/:sid", protect, addStudentInClass);
 
-router.put("/assignteacher/:cid/:tid", addTeacherInClass);
+router.put("/assignteacher/:cid/:tid", protect, addTeacherInClass);
 
 // DELETE Methods
-router.delete("/deleteteacher/:tid", deleteTeacher);
+router.delete("/deleteteacher/:tid", protect, deleteTeacher);
 
-router.delete("/deletestudent/:sid", deleteStudent);
+router.delete("/deletestudent/:sid", protect, deleteStudent);
 
-router.delete("/deleteclass/:cid", deleteClass);
+router.delete("/deleteclass/:cid", protect, deleteClass);
 
 module.exports = router;
