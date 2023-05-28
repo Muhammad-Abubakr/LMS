@@ -3,7 +3,7 @@ router = express.Router();
 const teacherController = require("../controllers/teacherController");
 const { protect } = require("../middlewares/authMiddleware");
 
-router.get("/", (req, res, next) => {
+router.get("/", protect, (req, res, next) => {
     res.send("Hello, Teacher.")
 })
 
