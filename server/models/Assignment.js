@@ -12,13 +12,11 @@ const assignmentSchema = new mongoose.Schema({
     },
 
     assignmentFile : {
-        type: Buffer,
-        required: true
+        type: Buffer
     },
 
     dueDate: {
-        type: Date,
-        required: true
+        type: Date
     },
     
     totalMarks: {

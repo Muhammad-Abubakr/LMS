@@ -13,12 +13,10 @@ const quizSchema = new mongoose.Schema({
 
     quizFile : {
         type: Buffer,
-        required: true
     },
 
     dueDate: {
         type: Date,
-        required: true
     },
 
     totalMarks: {
