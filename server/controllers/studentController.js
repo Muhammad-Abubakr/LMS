@@ -1,9 +1,4 @@
-const express = require("express");
-const router = express.Router();
-const express = require("express");
-const Class = require("../models/Class");
 const Course = require("../models/Course");
-const Teacher = require("../models/Teacher");
 const Student = require("../models/Student");
 const Assignment = require("../models/Assignment");
 const Quiz = require("../models/Quiz");
@@ -145,7 +140,7 @@ const showDashboard = async (req, res) => {
 
 // Show Grades "Adil's Route"
 
-exports.viewGrades = async (req, res) => {
+const viewGrades = async (req, res) => {
   const courseId = req.params.courseId;
 
   try {
@@ -299,4 +294,5 @@ module.exports = {
   signIn,
   showDashboard,
   studentResult,
+  viewGrades
 };

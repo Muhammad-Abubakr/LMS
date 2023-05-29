@@ -1,8 +1,5 @@
 var express = require("express");
 router = express.Router();
-const User = require("../models/User");
-var CryptoJS = require("crypto-js");
-const jwt = require("jsonwebtoken");
 var studentController = require("../controllers/studentController");
 
 router.get("/", (req, res, next) => {
