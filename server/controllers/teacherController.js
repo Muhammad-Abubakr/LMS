@@ -3,8 +3,36 @@ const Class = require("../models/Class");
 const Quiz = require("../models/Quiz");
 const Student = require("../models/Student");
 const Course = require("../models/Course");
+const Teacher = require("../models/Teacher");
 
 //GET
+const getDashboardInfo = async (req, res, next) => {
+  try {
+   const teacherId = req.params.tid;
+   const teacher = await Teacher.findById(teacherId).exec();
+   if (!teacher) {
+     throw new Error('Teacher not found');
+   }
+ 
+   const classes = await Class.find({ teacher: teacherId }).populate('students.sid').exec();
+   const classData = [];
+ 
+   for (let classItem of classes) {
+     const studentCount = classItem.students.length;
+     const className = classItem.name;
+     const students = classItem.students.map((student) => student.sid.name);
+     classData.push({ className, studentCount, students });
+   }
+   
+   res.status(200).json(classData);
+
+  }catch (error) {
+   throw new Error('Error retrieving classes and student counts: ' + error.message);
+  }
+ 
+ }
+
+
 const getAssignment = (req, res) => {
   const { classid, aid } = req.params;
 
@@ -857,6 +885,7 @@ const deleteMaterial = (req, res, next) => {
 };
 
 module.exports = {
+  getDashboardInfo,
   getAssignment,
   getAllAssignments,
   deleteAssignment,

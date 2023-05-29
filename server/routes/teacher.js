@@ -3,9 +3,11 @@ router = express.Router();
 const teacherController = require("../controllers/teacherController");
 const { protect } = require("../middlewares/authMiddleware");
 
-router.get("/", protect, (req, res, next) => {
-    res.send("Hello, Teacher.")
-})
+
+// @desc    view dashboard
+// @route   GET /:tid
+// @submitted by Atiq
+router.get("/:tid", teacherController.getDashboardInfo)
 
 // @desc    view specific assignment
 // @route   GET /assign/:classid/:aid
