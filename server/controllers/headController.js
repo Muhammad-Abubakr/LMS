@@ -1,6 +1,7 @@
 const Head = require('../models/Head');
 const Student = require('../models/Head');
 const Class = require('../models/Class');
+const Course = require("../models/Course");
 
 /* Controllers for Head */
 

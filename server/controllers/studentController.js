@@ -2,6 +2,7 @@ const Course = require("../models/Course");
 const Student = require("../models/Student");
 const Assignment = require("../models/Assignment");
 const Quiz = require("../models/Quiz");
+const User = require('../models/User');
 
 const login = (req, res) => {
   const { username, password } = req.query;

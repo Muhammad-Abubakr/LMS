@@ -1,5 +1,6 @@
 var express = require("express");
-router = express.Router();
+const router = express.Router();
+const { protect } = require("../middlewares/authMiddleware");
 var studentController = require("../controllers/studentController");
 
 router.get("/", (req, res, next) => {
@@ -13,30 +14,21 @@ router.get("/login", studentController.login);
 router.post("/login", studentController.signIn);
 
 //Moeez Ahmed
-router.get("/userprofile", studentController.studentprofile);
+router.get("/userprofile", protect, studentController.studentprofile);
 
 //Hassan Sajjad
-router.get(
-  "/student-dashboard/:courseid/coursematerial",
-  studentController.getmaterials
-);
+router.get("/student-dashboard/:courseid/coursematerial", protect, studentController.getmaterials);
 
 //Bilal Shakir
-router.get(
-  "/student-dashboard/:courseid/getassignment",
-  studentController.getassignment
-);
+router.get("/student-dashboard/:courseid/getassignment", protect, studentController.getassignment);
 
 // Show Dashboard "Adil's Route"
-router.get("/student-dashboard/:sid", studentController.showDashboard);
+router.get("/student-dashboard/:sid", protect, studentController.showDashboard);
 
 // Show Grades "Adil's Route"
-router.get(
-  "/student-dashboard/:courseid/enrolled-course/grades",
-  studentController.viewGrades
-);
+router.get("/student-dashboard/:courseid/enrolled-course/grades", protect, studentController.viewGrades);
 
 //Bilal Gondal
-router.get("/student/:id/result", studentController.studentResult);
+router.get("/student/:id/result", protect, studentController.studentResult);
 
 module.exports = router;
